@@ -2,21 +2,33 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from dotenv import load_dotenv
+from datetime import date
 import os
 import time
-from datetime import date
 
+# Variáveis
 load_dotenv()
 user = os.environ['TELE_USER']
 pwd  = os.environ['TELE_PASS']
+dirs = os.environ['DIR']
 today = date.today().strftime("%d/%m/%Y")
 
+# definindo caminho para download
+options = webdriver.ChromeOptions()
+prefs = {
+    "download.default_directory": dirs,
+    "download.prompt_for_download": False,  
+    "directory_upgrade": True
+}
+options.add_experimental_option("prefs", prefs)
+
 # abrindo navegador
-navegador = webdriver.Chrome()
+navegador = webdriver.Chrome(options=options)
 navegador.maximize_window()
+
 # passando url para busca
 navegador.get('https://upixnetworks.hubsoft.com.br/')
-
+time.sleep(5)
 # email
 navegador.find_element(By.XPATH, '//*[@id="input_2"]').send_keys(user)
 navegador.find_element(By.XPATH, '//*[@id="stageForm"]/div[2]/button').click()
